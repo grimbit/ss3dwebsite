@@ -10,7 +10,7 @@ function Gallery() {
   };
   const fetchImages = () => {
     gallerylist = importAll(
-      require.context('./gallery/', false, /\.(png|jpe?g|svg)$/)
+      require.context('./images/', false, /\.(png|jpe?g|svg)$/)
     );
   };
   useEffect(() => {
