@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 import StarsImage from './img/stars.png';
 import LogoImg from './img/ss3dsitelogo.png';
+
 
 // background
 export const FrameStyle = styled.div`
@@ -44,17 +46,22 @@ export const NavBar = styled.div`
   box-shadow: 0.4rem 0rem 0.5rem rgba(0, 0, 0, 0.5);
 `;
 
-export const NavButton = styled.div`
+export const NavButton = styled(NavLink)`
   display: flex;
   align-items: center;
   height: 100%;
+  color: #fff;
+  text-decoration: none;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  text-transform: uppercase;
+
   &:hover {
-    text-shadow: 0rem 0rem 0.5rem white;
-    color: white;
-    background-color: #381c1c;
+    background-color: #EF7975;
   }
-  &:active {
-    background-color: #db6363;
+
+  &.active {
+    background-color: #841721;
   }
 `;
 
