@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, useLocation, Switch } from 'react-router-dom';
 import {
   FrameStyle,
   ContentFrame,
@@ -6,26 +7,52 @@ import {
   NavBarText,
   NavButton,
   PageContainer,
-  Gtext,
   PageLoader,
   Logo
 } from './App.styles';
 import GlobalFonts from './fonts/fonts';
 import { Remarkable } from 'remarkable';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Gallery from './components/Gallery';
-function App() {
+
+// @todo take out and make a proper 404 page component
+const NotFound = () => {
+  return <div>H-h-here is notin, eyem vewy sowwy ;_;</div>;
+}
+
+const Default = () => {
+  const pathname = useLocation();
+  const newPathname = pathname.pathname;
+
+  let currentMd:string;
+
+  // checking if pathname is different from "/"
+  // not the best way, probs should be redone
+  if (newPathname !== "/") {
+    currentMd = '/articles' + newPathname + '.md';
+  } else {
+    currentMd = '/articles/MainPage.md';
+  }
+
   const [mdactive, setMdactive] = useState('');
-  const [displaypage, setDisplaypage] = useState('/articles/MainPage.md');
 
   useEffect(() => {
-    fetch(displaypage).then(function (a) {
+    fetch(currentMd).then(function (a) {
       return a.text().then(function (b) {
         setMdactive(b);
       });
     });
-  }, [displaypage]);
+  }, [currentMd]);
+  
   const md = new Remarkable();
+
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: md.render(mdactive) }}
+    >
+    </div>);
+};
+
+function App() {
 
   return (
     <Router>
@@ -34,25 +61,20 @@ function App() {
         <ContentFrame>
           <NavBar>
             <NavBarText>
-              <NavButton
-                onClick={() => setDisplaypage('/articles/MainPage.md')}
-              >
-                <Gtext>HOME</Gtext>
+              <NavButton to="/" exact>
+                Home
               </NavButton>
-              <NavButton onClick={() => setDisplaypage('/articles/Devblog.md')}>
-                <Gtext>DEVBLOG</Gtext>
+              <NavButton to="/devblog">
+                Devblog
               </NavButton>
-              <Route path="./components/Gallery" component={Gallery} />
-              <NavButton>
-                <Gtext>ART</Gtext>
+              <NavButton to="/gallery">
+                Art
               </NavButton>
-              <NavButton onClick={() => setDisplaypage('/articles/About.md')}>
-                <Gtext>ABOUT</Gtext>
+              <NavButton to="/about">
+                About
               </NavButton>
-              <NavButton
-                onClick={() => setDisplaypage('/articles/Contribute.md')}
-              >
-                <Gtext>CONTRIBUTE</Gtext>
+              <NavButton to="/contribute">
+                Contribute
               </NavButton>
             </NavBarText>
           </NavBar>
@@ -60,9 +82,14 @@ function App() {
           <PageContainer>
             <Logo></Logo>
             <PageLoader>
-              <div
-                dangerouslySetInnerHTML={{ __html: md.render(mdactive) }}
-              ></div>
+              <Switch>
+                <Route path="/" exact component={Default}/>
+                <Route path="/devblog" component={Default} />
+                <Route path="/about" component={Default} />
+                <Route path="/gallery" component={Gallery} />
+                <Route path="/contribute" component={Default} />
+                <Route component={NotFound} />
+              </Switch>
             </PageLoader>
           </PageContainer>
         </ContentFrame>

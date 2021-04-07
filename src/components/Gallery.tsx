@@ -18,6 +18,7 @@ function Gallery() {
   }, []);
   return (
     <PageLoader>
+      hi this gallery page
       {gallerylist.map((image: any, index: any) => (
         <GalleryImage key={index} src={image}></GalleryImage>
       ))}
