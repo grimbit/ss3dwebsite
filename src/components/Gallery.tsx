@@ -1,27 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { PageLoader } from '../App.styles';
 import { GalleryImage } from './Gallery.styles';
 
-let gallerylist: any = [];
 
 function Gallery() {
-  const importAll = (r: any) => {
-    return r.keys().map(r);
-  };
-  const fetchImages = () => {
-    gallerylist = importAll(
-      require.context('./images/', false, /\.(png|jpe?g|svg)$/)
-    );
-  };
-  useEffect(() => {
-    fetchImages();
-  }, []);
+  const templates = require.context('./images/', true, /\.(png|jpe?g)$/);
+
+    const renderItems = () => {
+        return  templates.keys().map((elem, i) => (
+            // @todo insert alt here
+            <GalleryImage key={elem} src={templates(elem).default} alt="" />
+        ))
+    };
+
   return (
     <PageLoader>
       hi this gallery page
-      {gallerylist.map((image: any, index: any) => (
-        <GalleryImage key={index} src={image}></GalleryImage>
-      ))}
+      {renderItems()}
     </PageLoader>
   );
 }

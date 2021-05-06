@@ -25,10 +25,16 @@ const Default = () => {
 
   let currentMd:string;
 
+  // need to capitalize the second letter of the path
+  // the first letter being "/"
+  const capitalize = (s: string) => {
+    return s.charAt(1).toUpperCase() + s.slice(2)
+  }
+
   // checking if pathname is different from "/"
   // not the best way, probs should be redone
   if (newPathname !== "/") {
-    currentMd = '/articles' + newPathname + '.md';
+    currentMd = '/articles/' + capitalize(newPathname) + '.md';
   } else {
     currentMd = '/articles/MainPage.md';
   }
@@ -80,7 +86,7 @@ function App() {
           </NavBar>
 
           <PageContainer>
-            <Logo></Logo>
+            <Logo/>
             <PageLoader>
               <Switch>
                 <Route path="/" exact component={Default}/>
